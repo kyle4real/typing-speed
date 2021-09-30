@@ -11,6 +11,5 @@ export const GlobalStyles = createGlobalStyle`
         background: ${({ theme }) => theme.bg};
         color: ${({ theme }) => theme.text};
         font-family: 'Source Sans Pro', sans-serif;
-        letter-spacing: .6px;
     }
 `;

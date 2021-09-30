@@ -8,34 +8,23 @@ import logo from "../../public/logo.png";
 
 import {
     SButton,
-    SButtonContainer,
     SFlex,
     SHeader,
     SHeaderFixed,
     SHeaderMain,
     SLogo,
-    SLogoContainer,
     SMenu,
-    SMenuButton,
-    SMenuButtonContainer,
-    SMenuCarrot,
-    SMenuContainer,
     SMenuIcon,
-    SMenuIconContainer,
     SMenuNav,
-    SMenuNavItem,
-    SMenuNavItemContainer,
-    SMenuSection,
-    SMenuSectionTitle,
     SMenuTitle,
     SNav,
-    SNavItem,
-    SNavItemContainer,
     SNavLink,
 } from "./styles";
+import { useRouter } from "next/dist/client/router";
 
-const Header = () => {
+const Header = ({ headerData }) => {
     const dispatch = useDispatch();
+    const { route } = useRouter();
     const { menuOpen } = useSelector((state) => state.ui);
 
     return (
@@ -52,44 +41,32 @@ const Header = () => {
                     </SFlex>
                     <SFlex>
                         <SNav>
-                            <Link href="/stats" passHref>
-                                <SNavLink>Stats</SNavLink>
-                            </Link>
-                            <Link href="/" passHref>
-                                <SNavLink isActive>Type Test</SNavLink>
-                            </Link>
-                            <Link href="/ranks" passHref>
-                                <SNavLink>Ranks</SNavLink>
-                            </Link>
+                            {headerData.navLinks.map(({ text, href }, index) => (
+                                <Link href={href} passHref key={index}>
+                                    <SNavLink isActive={route === href}>{text}</SNavLink>
+                                </Link>
+                            ))}
                         </SNav>
                     </SFlex>
                     <SFlex>
-                        <SButton>Sign In</SButton>
+                        <SButton>{headerData.button.text}</SButton>
                     </SFlex>
                     <SFlex>
                         <SMenuIcon onClick={() => dispatch(uiActions.menuToggle())} />
                     </SFlex>
-                    <>
-                        {menuOpen && (
-                            <SMenu>
-                                <SMenuTitle>Navigation</SMenuTitle>
-                                <SMenuNav>
-                                    <Link href="/stats" passHref>
-                                        <SNavLink>Stats</SNavLink>
+                    {menuOpen && (
+                        <SMenu>
+                            <SMenuTitle>Navigation</SMenuTitle>
+                            <SMenuNav>
+                                {headerData.navLinks.map(({ text, href }, index) => (
+                                    <Link href={href} passHref key={index}>
+                                        <SNavLink isActive={route === href}>{text}</SNavLink>
                                     </Link>
-                                    <Link href="/" passHref>
-                                        <SNavLink>Type Test</SNavLink>
-                                    </Link>
-                                    <Link href="/ranks" passHref>
-                                        <SNavLink>Ranks</SNavLink>
-                                    </Link>
-                                </SMenuNav>
-                                <>
-                                    <SButton>Sign in</SButton>
-                                </>
-                            </SMenu>
-                        )}
-                    </>
+                                ))}
+                            </SMenuNav>
+                            <SButton>{headerData.button.text}</SButton>
+                        </SMenu>
+                    )}
                 </SHeaderMain>
             </SHeaderFixed>
         </>

@@ -2,8 +2,6 @@ import styled from "styled-components";
 
 import { v, b, s } from "../../styles/variables";
 
-import Link from "next/link";
-
 import { RiMenu4Fill } from "react-icons/ri";
 
 export const SHeader = styled.div`
@@ -88,6 +86,7 @@ export const SNavLink = styled.a`
     text-decoration: none;
     text-transform: uppercase;
     font-weight: 600;
+    font-size: 14px;
     padding: ${v.smSpacing} ${v.mdSpacing};
     height: 100%;
     display: flex;
@@ -96,14 +95,17 @@ export const SNavLink = styled.a`
     transition: all 0.3s ease;
     :hover {
         color: ${({ theme }) => theme.primary};
-        box-shadow: inset 0 ${({ isActive }) => (isActive ? "-4px" : "-1px")} 0
-            ${({ theme }) => theme.primary};
     }
 
     color: ${({ theme, isActive }) => (!isActive ? "inherit" : theme.primary)};
 
     @media ${b.md} {
         box-shadow: inset 0 -4px 0 ${({ theme, isActive }) => (!isActive ? "transparent" : theme.primary)};
+
+        :hover {
+            box-shadow: inset 0 ${({ isActive }) => (isActive ? "-4px" : "-1px")} 0
+                ${({ theme }) => theme.primary};
+        }
     }
 `;
 
@@ -115,9 +117,10 @@ export const SButton = styled.button`
     padding: ${v.smSpacing} ${v.lgSpacing};
     color: ${({ theme }) => theme.textInvert};
     border-radius: ${v.borderRadius};
-    font-size: 16px;
+    font-size: 14px;
     font-family: inherit;
     cursor: pointer;
+    text-transform: uppercase;
 `;
 
 // MENU //////////////
