@@ -7,9 +7,6 @@ export const STextBox = styled.div`
     height: 100px;
     border: 1px solid ${({ theme }) => theme.primary};
     box-shadow: inset 0 0 6px 0 rgba(0, 0, 0, 0.3);
-    @media ${b.sm} {
-        width: ${s.sm};
-    }
     display: flex;
     align-items: center;
     justify-content: center;

@@ -1,10 +1,17 @@
 import styled from "styled-components";
 
-import { v } from "../../styles/variables";
+import { v, b, s } from "../../styles/variables";
 
 export const STypeTest = styled.div`
     display: flex;
     justify-content: center;
+`;
+
+export const STypeTestContent = styled.div`
+    width: 100%;
+    @media ${b.sm} {
+        width: ${s.sm};
+    }
 `;
 
 export const SInput = styled.input`

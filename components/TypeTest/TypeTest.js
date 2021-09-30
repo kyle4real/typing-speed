@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import { SInput, STypeTest, STimer } from "./styles";
+import { SInput, STypeTest, STimer, STypeTestContent } from "./styles";
 import TextBox from "./TextBox/TextBox";
 
 const wordsArr = [
@@ -23,7 +23,25 @@ const wordsArr = [
     "stock",
     "apparent",
 ];
-const words = wordsArr.reduce((r, v, i) => {
+
+const shuffle = (array) => {
+    let currentIndex = array.length,
+        randomIndex;
+
+    // While there remain elements to shuffle...
+    while (currentIndex != 0) {
+        // Pick a remaining element...
+        randomIndex = Math.floor(Math.random() * currentIndex);
+        currentIndex--;
+
+        // And swap it with the current element.
+        [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
+    }
+
+    return array;
+};
+
+const words = shuffle(wordsArr).reduce((r, v, i) => {
     return r.concat({
         word: v,
         id: i,
@@ -64,11 +82,11 @@ const TypeTest = () => {
 
     return (
         <STypeTest>
-            <div>
+            <STypeTestContent>
                 <TextBox wordsArr={words} input={input} setInput={setInput} on={on} />
                 <SInput value={input} onChange={changeHandler} />
                 <STimer>{count}</STimer>
-            </div>
+            </STypeTestContent>
         </STypeTest>
     );
 };

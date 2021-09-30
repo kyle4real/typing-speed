@@ -20,13 +20,16 @@ const wordsSlice = createSlice({
             state.finishedWords.push(state.currentWord);
             state.currentWord = state.upcomingWords[0];
             state.upcomingWords = state.upcomingWords.slice(1);
+        },
+        pushNewWord(state, action) {
+            const { wordsArr } = action.payload;
             // Push new word
             const newId = state.words[state.words.length - 1].id + 1;
-            const randomWord = state.words[Math.ceil(Math.random() * state.words.length - 1)].word;
+            const randomWord = wordsArr[Math.ceil(Math.random() * wordsArr.length - 1)].word;
+            console.log(Math.ceil(Math.random() * state.words.length - 1));
             state.words.push({ word: randomWord, id: newId });
             state.upcomingWords.push(newId);
         },
-        addWordToUpcoming(state) {},
         addCorrectWord(state, action) {
             state.correctWords.push(action.payload);
         },

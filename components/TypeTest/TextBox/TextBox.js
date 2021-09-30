@@ -32,7 +32,7 @@ const TextBox = ({ wordsArr, input, setInput, on }) => {
     useEffect(() => {
         dispatch(
             wordsActions.replaceState({
-                wordsArr,
+                wordsArr: wordsArr,
                 currentWord: wordsArr[0].id,
                 upcomingWords: wordsArr.slice(1).reduce((r, v) => {
                     return r.concat(v.id);
@@ -88,13 +88,14 @@ const TextBox = ({ wordsArr, input, setInput, on }) => {
         if (spacebar) {
             addIfValid(input);
             dispatch(wordsActions.nextWord());
+            dispatch(wordsActions.pushNewWord({ wordsArr }));
             setInput("");
         }
 
         const isValid = checkValidity(input);
         if (!isValid) setValid(false);
         else setValid(true);
-    }, [input, on, checkValidity, checkIfSpacebar, dispatch, setInput, addIfValid]);
+    }, [input, on, checkValidity, checkIfSpacebar, dispatch, setInput, addIfValid, wordsArr]);
 
     useEffect(() => {
         console.log(words);
