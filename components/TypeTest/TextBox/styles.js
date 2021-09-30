@@ -31,30 +31,15 @@ export const SWords = styled.div`
 export const SFinished = styled.span`
     font-size: 18px;
     padding: 0 4px;
+    color: ${({ theme, isCorrect }) => (!isCorrect ? "crimson" : "green")};
 `;
 export const SUpcoming = styled.span`
-    color: red;
+    color: ${({ theme }) => theme.text};
     font-size: 18px;
     padding: 0 4px;
 `;
 export const SCurrent = styled.span`
     font-size: 18px;
     padding: 0 4px;
-`;
-
-export const SFinishedWords = styled.div`
-    position: absolute;
-    right: 0;
-    top: 0;
-`;
-
-export const SUpcomingWords = styled.div`
-    position: absolute;
-    left: 0;
-    top: 0;
-`;
-
-export const SCurrentWord = styled.span`
     color: ${({ theme, isValid }) => (isValid ? theme.primary : "red")};
-    font-size: 18px;
 `;

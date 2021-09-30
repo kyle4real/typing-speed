@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { Fragment, useCallback, useEffect, useRef, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import { wordsActions } from "../../../app/slices/wordsSlice";
@@ -21,12 +21,12 @@ const TextBox = ({ words, input, setInput, on }) => {
     const ref = useRef(null);
     const finishedRef = useRef(null);
     const firstTime = useRef(true);
-    const { currentWord, upcomingWords, finishedWords } = useSelector((state) => state.words);
+    const { currentWord, upcomingWords, finishedWords, correctWords } = useSelector(
+        (state) => state.words
+    );
     const [offsetWidth, setOffsetWidth] = useState(0);
 
     const [valid, setValid] = useState(true);
-
-    console.log(words);
 
     // On Mount
     useEffect(() => {
@@ -52,61 +52,79 @@ const TextBox = ({ words, input, setInput, on }) => {
         }
     }, [currentWord]);
 
-    const checkValidity = useCallback(() => {
-        const inputLength = input.trim().length;
-        const currentWordLength = currentWord.length;
-        if (inputLength > currentWordLength) return false;
-        for (let i = 0; i < inputLength; i++) {
-            if (currentWord[i] !== input[i]) return false;
-        }
-        return true;
-    }, [input, currentWord]);
+    const checkValidity = useCallback(
+        (input) => {
+            const word = words.find((item) => item.id === currentWord).word;
+            const inputLength = input.trim().length;
+            const currentWordLength = word.length;
+            if (inputLength > currentWordLength) return false;
+            for (let i = 0; i < inputLength; i++) {
+                if (word[i] !== input[i]) return false;
+            }
+            return true;
+        },
+        [currentWord, words]
+    );
 
-    const checkIfSpacebar = useCallback(() => {
+    const checkIfSpacebar = useCallback((input) => {
         return input.includes(" ");
-    }, [input]);
+    }, []);
+
+    const addIfValid = useCallback(
+        (input) => {
+            console.log(input.trim());
+            const word = words.find((item) => item.id === currentWord).word;
+            if (input.trim() === word) {
+                dispatch(wordsActions.addCorrectWord(currentWord));
+            }
+        },
+        [currentWord, dispatch, words]
+    );
 
     useEffect(() => {
         if (!on) return;
-        const spacebar = checkIfSpacebar();
+        const spacebar = checkIfSpacebar(input);
         if (spacebar) {
+            addIfValid(input);
             dispatch(wordsActions.nextWord());
             setInput("");
         }
 
-        // const isValid = checkValidity();
-        // if (!isValid) setValid(false);
-        // else setValid(true);
-    }, [input, on, checkValidity, checkIfSpacebar, dispatch, setInput]);
+        const isValid = checkValidity(input);
+        if (!isValid) setValid(false);
+        else setValid(true);
+    }, [input, on, checkValidity, checkIfSpacebar, dispatch, setInput, addIfValid]);
+
+    useEffect(() => {
+        console.log(correctWords);
+    }, [correctWords]);
 
     return (
         <STextBox>
             <SCenter>
-                {/* <SFinishedWords style={{ right: offsetWidth }}>
-                    {finishedWords.map((word, index) => (
-                        <Word key={index}>{word}&nbsp;</Word>
-                    ))}
-                </SFinishedWords>
-                <SCurrentWord ref={ref} isValid={valid}>
-                    {currentWord}
-                </SCurrentWord>
-                <SUpcomingWords style={{ left: offsetWidth }}>
-                    {upcomingWords.map((word, index) => (
-                        <Word key={index}>&nbsp;{word}</Word>
-                    ))}
-                </SUpcomingWords> */}
                 <SWords style={{ left: offsetWidth }}>
-                    {words.map(({ word, id }) => {
+                    {words.map(({ word, id }, index) => {
+                        let wordComponent;
                         if (finishedWords.includes(id)) {
-                            if (id + 1 === currentWord) {
-                                return <SFinished ref={finishedRef}>{word}</SFinished>;
-                            }
-                            return <SFinished>{word}</SFinished>;
+                            const isCorrect = correctWords.includes(id);
+                            if (id + 1 === currentWord)
+                                wordComponent = (
+                                    <SFinished ref={finishedRef} isCorrect={isCorrect}>
+                                        {word}
+                                    </SFinished>
+                                );
+                            else
+                                wordComponent = <SFinished isCorrect={isCorrect}>{word}</SFinished>;
                         } else if (upcomingWords.includes(id)) {
-                            return <SUpcoming>{word}</SUpcoming>;
+                            wordComponent = <SUpcoming>{word}</SUpcoming>;
                         } else {
-                            return <SCurrent ref={ref}>{word}</SCurrent>;
+                            wordComponent = (
+                                <SCurrent ref={ref} isValid={valid}>
+                                    {word}
+                                </SCurrent>
+                            );
                         }
+                        return <Fragment key={index}>{wordComponent}</Fragment>;
                     })}
                 </SWords>
             </SCenter>
