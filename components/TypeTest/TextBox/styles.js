@@ -18,6 +18,28 @@ export const STextBox = styled.div`
 
 export const SCenter = styled.div`
     position: relative;
+    height: 16px;
+`;
+
+export const SWords = styled.div`
+    position: absolute;
+    transition: left 0.1s ease;
+    left: 0;
+    top: 0;
+`;
+
+export const SFinished = styled.span`
+    font-size: 18px;
+    padding: 0 4px;
+`;
+export const SUpcoming = styled.span`
+    color: red;
+    font-size: 18px;
+    padding: 0 4px;
+`;
+export const SCurrent = styled.span`
+    font-size: 18px;
+    padding: 0 4px;
 `;
 
 export const SFinishedWords = styled.div`

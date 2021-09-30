@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from "react";
 import { SInput, STypeTest, STimer } from "./styles";
 import TextBox from "./TextBox/TextBox";
 
-const words = [
+const wordsArr = [
     "consider",
     "minute",
     "accord",
@@ -23,6 +23,12 @@ const words = [
     "stock",
     "apparent",
 ];
+const words = wordsArr.reduce((r, v, i) => {
+    return r.concat({
+        word: v,
+        id: i,
+    });
+}, []);
 
 const TypeTest = () => {
     const timerRef = useRef(null);
