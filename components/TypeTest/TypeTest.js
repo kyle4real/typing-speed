@@ -65,7 +65,7 @@ const TypeTest = () => {
     return (
         <STypeTest>
             <div>
-                <TextBox words={words} input={input} setInput={setInput} on={on} />
+                <TextBox wordsArr={words} input={input} setInput={setInput} on={on} />
                 <SInput value={input} onChange={changeHandler} />
                 <STimer>{count}</STimer>
             </div>

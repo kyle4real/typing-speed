@@ -16,12 +16,12 @@ import {
 } from "./styles";
 import Word from "./Word/Word";
 
-const TextBox = ({ words, input, setInput, on }) => {
+const TextBox = ({ wordsArr, input, setInput, on }) => {
     const dispatch = useDispatch();
     const ref = useRef(null);
     const finishedRef = useRef(null);
     const firstTime = useRef(true);
-    const { currentWord, upcomingWords, finishedWords, correctWords } = useSelector(
+    const { words, currentWord, upcomingWords, finishedWords, correctWords } = useSelector(
         (state) => state.words
     );
     const [offsetWidth, setOffsetWidth] = useState(0);
@@ -32,13 +32,14 @@ const TextBox = ({ words, input, setInput, on }) => {
     useEffect(() => {
         dispatch(
             wordsActions.replaceState({
-                currentWord: words[0].id,
-                upcomingWords: words.slice(1).reduce((r, v) => {
+                wordsArr,
+                currentWord: wordsArr[0].id,
+                upcomingWords: wordsArr.slice(1).reduce((r, v) => {
                     return r.concat(v.id);
                 }, []),
             })
         );
-    }, [dispatch, words]);
+    }, [dispatch, wordsArr]);
 
     useEffect(() => {
         if (!ref.current) return;
@@ -96,8 +97,8 @@ const TextBox = ({ words, input, setInput, on }) => {
     }, [input, on, checkValidity, checkIfSpacebar, dispatch, setInput, addIfValid]);
 
     useEffect(() => {
-        console.log(correctWords);
-    }, [correctWords]);
+        console.log(words);
+    }, [words]);
 
     return (
         <STextBox>
