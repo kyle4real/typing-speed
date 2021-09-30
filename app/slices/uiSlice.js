@@ -4,8 +4,13 @@ const uiSlice = createSlice({
     name: "ui",
     initialState: {
         theme: "light",
+        menuOpen: false,
     },
-    reducers: {},
+    reducers: {
+        menuToggle(state) {
+            state.menuOpen = !state.menuOpen;
+        },
+    },
 });
 
 export const uiActions = uiSlice.actions;
