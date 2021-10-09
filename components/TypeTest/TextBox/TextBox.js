@@ -14,16 +14,13 @@ import {
     SUpcomingWords,
     SWords,
 } from "./styles";
-import Word from "./Word/Word";
 
 const TextBox = ({ wordsArr, input, setInput, on }) => {
     const dispatch = useDispatch();
     const ref = useRef(null);
     const finishedRef = useRef(null);
     const firstTime = useRef(true);
-    const { words, currentWord, upcomingWords, finishedWords, correctWords } = useSelector(
-        (state) => state.words
-    );
+    const { words, currentWord, correctWords } = useSelector((state) => state.words);
     const [offsetWidth, setOffsetWidth] = useState(0);
 
     const [valid, setValid] = useState(true);
@@ -33,10 +30,7 @@ const TextBox = ({ wordsArr, input, setInput, on }) => {
         dispatch(
             wordsActions.replaceState({
                 wordsArr: wordsArr,
-                currentWord: wordsArr[0].id,
-                upcomingWords: wordsArr.slice(1).reduce((r, v) => {
-                    return r.concat(v.id);
-                }, []),
+                currentWord: wordsArr[0],
             })
         );
     }, [dispatch, wordsArr]);
@@ -55,7 +49,7 @@ const TextBox = ({ wordsArr, input, setInput, on }) => {
 
     const checkValidity = useCallback(
         (input) => {
-            const word = words.find((item) => item.id === currentWord).word;
+            const word = currentWord.word;
             const inputLength = input.trim().length;
             const currentWordLength = word.length;
             if (inputLength > currentWordLength) return false;
@@ -64,7 +58,7 @@ const TextBox = ({ wordsArr, input, setInput, on }) => {
             }
             return true;
         },
-        [currentWord, words]
+        [currentWord]
     );
 
     const checkIfSpacebar = useCallback((input) => {
@@ -73,13 +67,12 @@ const TextBox = ({ wordsArr, input, setInput, on }) => {
 
     const addIfValid = useCallback(
         (input) => {
-            console.log(input.trim());
-            const word = words.find((item) => item.id === currentWord).word;
+            const word = currentWord.word;
             if (input.trim() === word) {
                 dispatch(wordsActions.addCorrectWord(currentWord));
             }
         },
-        [currentWord, dispatch, words]
+        [currentWord, dispatch]
     );
 
     useEffect(() => {
@@ -97,19 +90,16 @@ const TextBox = ({ wordsArr, input, setInput, on }) => {
         else setValid(true);
     }, [input, on, checkValidity, checkIfSpacebar, dispatch, setInput, addIfValid, wordsArr]);
 
-    useEffect(() => {
-        console.log(words);
-    }, [words]);
-
+    const current = words.find((word) => word.id === currentWord.id);
     return (
         <STextBox>
             <SCenter>
                 <SWords style={{ left: offsetWidth }}>
                     {words.map(({ word, id }, index) => {
                         let wordComponent;
-                        if (finishedWords.includes(id)) {
-                            const isCorrect = correctWords.includes(id);
-                            if (id + 1 === currentWord)
+                        if (id < current.id) {
+                            const isCorrect = !!correctWords.find((word) => word.id === id);
+                            if (id + 1 === currentWord.id)
                                 wordComponent = (
                                     <SFinished ref={finishedRef} isCorrect={isCorrect}>
                                         {word}
@@ -117,7 +107,7 @@ const TextBox = ({ wordsArr, input, setInput, on }) => {
                                 );
                             else
                                 wordComponent = <SFinished isCorrect={isCorrect}>{word}</SFinished>;
-                        } else if (upcomingWords.includes(id)) {
+                        } else if (id > current.id) {
                             wordComponent = <SUpcoming>{word}</SUpcoming>;
                         } else {
                             wordComponent = (
