@@ -1,5 +1,15 @@
 import React, { useState, useRef, useEffect } from "react";
-import { SInput, STypeTest, STimer, STypeTestContent } from "./styles";
+import Results from "./Results/Results";
+import {
+    SInput,
+    STypeTest,
+    STimer,
+    STypeTestContent,
+    SRefreshButton,
+    SRefreshIcon,
+    SFlexBox,
+    SRelativeContainer,
+} from "./styles";
 import TextBox from "./TextBox/TextBox";
 
 const wordsArr = [
@@ -84,8 +94,14 @@ const TypeTest = () => {
         <STypeTest>
             <STypeTestContent>
                 <TextBox wordsArr={words} input={input} setInput={setInput} on={on} />
-                <SInput value={input} onChange={changeHandler} />
-                <STimer>{count}</STimer>
+                <SRelativeContainer>
+                    <STimer>{count}</STimer>
+                    <SInput value={input} onChange={changeHandler} />
+                    <SRefreshButton>
+                        <SRefreshIcon />
+                    </SRefreshButton>
+                </SRelativeContainer>
+                <Results />
             </STypeTestContent>
         </STypeTest>
     );

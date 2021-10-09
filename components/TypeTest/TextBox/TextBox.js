@@ -2,18 +2,7 @@ import React, { Fragment, useCallback, useEffect, useRef, useState } from "react
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import { wordsActions } from "../../../app/slices/wordsSlice";
-import CurrentWord from "./CurrentWord/CurrentWord";
-import {
-    SCenter,
-    SCurrent,
-    SCurrentWord,
-    SFinished,
-    SFinishedWords,
-    STextBox,
-    SUpcoming,
-    SUpcomingWords,
-    SWords,
-} from "./styles";
+import { SCenter, SCurrent, SFinished, STextBox, SUpcoming, SWords } from "./styles";
 
 const TextBox = ({ wordsArr, input, setInput, on }) => {
     const dispatch = useDispatch();
@@ -89,6 +78,10 @@ const TextBox = ({ wordsArr, input, setInput, on }) => {
         if (!isValid) setValid(false);
         else setValid(true);
     }, [input, on, checkValidity, checkIfSpacebar, dispatch, setInput, addIfValid, wordsArr]);
+
+    useEffect(() => {
+        console.log(correctWords);
+    }, [correctWords]);
 
     const current = words.find((word) => word.id === currentWord.id);
     return (
