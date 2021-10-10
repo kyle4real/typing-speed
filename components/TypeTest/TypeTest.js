@@ -1,5 +1,7 @@
 import React, { useState, useRef, useEffect, useCallback } from "react";
+import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
+import { resultsActions } from "../../app/slices/resultsSlice";
 import Results from "./Results/Results";
 import {
     SInput,
@@ -69,6 +71,7 @@ const wordsLength = (words) => {
 const initialCount = 5;
 
 const TypeTest = () => {
+    const dispatch = useDispatch();
     const { correctWords, incorrectWords } = useSelector((state) => state.words);
     const timerRef = useRef(null);
     const [on, setOn] = useState(false);
@@ -106,7 +109,7 @@ const TypeTest = () => {
                     (totalRequiredKeyStrokes + incorrectKeyStrokes)) *
                 100;
         }
-        accuracy = accuracy.toFixed(2);
+        accuracy = Number(accuracy.toFixed(2));
 
         const resultObj = {
             correctWords: correctWordsArray.length,
@@ -119,10 +122,11 @@ const TypeTest = () => {
             accuracy,
         };
 
-        console.log(`Correct: ${correctWordsArray.join(" ")}`);
-        console.log(`Incorrect: ${incorrectWordsArray.join(" ")}`);
-        console.log(resultObj);
-    }, [correctWords, incorrectWords, keyStrokes]);
+        // console.log(`Correct: ${correctWordsArray.join(" ")}`);
+        // console.log(`Incorrect: ${incorrectWordsArray.join(" ")}`);
+        // console.log(resultObj);
+        dispatch(resultsActions.replaceLatestResult({ resultObj }));
+    }, [correctWords, incorrectWords, keyStrokes, dispatch]);
 
     const changeHandler = (e) => {
         if (hide) return;

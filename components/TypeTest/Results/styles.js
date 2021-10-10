@@ -44,7 +44,18 @@ export const SListItem = styled.li`
     }
 `;
 export const SLabel = styled.span``;
+export const SDataDiv = styled.div`
+    display: flex;
+`;
 export const SData = styled.span``;
+
+export const SCorrectKS = styled.span`
+    color: green;
+`;
+export const SIncorrectKS = styled.span`
+    color: red;
+`;
+
 export const SResultOptions = styled.div`
     padding: ${v.mdSpacing} ${v.mdSpacing} ${v.smSpacing};
 `;

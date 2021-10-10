@@ -4,8 +4,14 @@ const resultsSlice = createSlice({
     name: "results",
     initialState: {
         results: [],
+        latestResult: [],
     },
-    reducers: {},
+    reducers: {
+        replaceLatestResult(state, action) {
+            const { resultObj } = action.payload;
+            state.latestResult = [resultObj];
+        },
+    },
 });
 
 export const resultsActions = resultsSlice.actions;
