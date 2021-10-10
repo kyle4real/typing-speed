@@ -92,6 +92,22 @@ const TypeTest = () => {
         const WPM =
             Math.ceil(60 / initialCount) * Math.round(correctWordsArray.join(" ").length / 5);
 
+        let accuracy;
+        if (!incorrectWordsArray.length && !incorrectKeyStrokes) accuracy = 100;
+        else if (!incorrectWordsArray.length && incorrectKeyStrokes) {
+            accuracy =
+                (totalRequiredKeyStrokes / (totalRequiredKeyStrokes + incorrectKeyStrokes)) * 100;
+        } else if (incorrectWordsArray.length && !incorrectKeyStrokes) {
+            accuracy =
+                ((totalRequiredKeyStrokes - incorrectWordsLength) / totalRequiredKeyStrokes) * 100;
+        } else if (incorrectWordsArray.length && incorrectKeyStrokes) {
+            accuracy =
+                ((totalRequiredKeyStrokes - incorrectWordsLength) /
+                    (totalRequiredKeyStrokes + incorrectKeyStrokes)) *
+                100;
+        }
+        accuracy = accuracy.toFixed(2);
+
         const resultObj = {
             correctWords: correctWordsArray.length,
             incorrectWords: incorrectWordsArray.length,
@@ -100,8 +116,11 @@ const TypeTest = () => {
             correctKeyStrokes,
             incorrectKeyStrokes,
             totalRequiredKeyStrokes,
+            accuracy,
         };
 
+        console.log(`Correct: ${correctWordsArray.join(" ")}`);
+        console.log(`Incorrect: ${incorrectWordsArray.join(" ")}`);
         console.log(resultObj);
     }, [correctWords, incorrectWords, keyStrokes]);
 
