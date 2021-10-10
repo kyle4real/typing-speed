@@ -6,6 +6,7 @@ const wordsSlice = createSlice({
         words: [],
         currentWord: "",
         correctWords: [],
+        incorrectWords: [],
     },
     reducers: {
         replaceState(state, action) {
@@ -25,6 +26,9 @@ const wordsSlice = createSlice({
         },
         addCorrectWord(state, action) {
             state.correctWords.push(action.payload);
+        },
+        addIncorrectWord(state, action) {
+            state.incorrectWords.push(action.payload);
         },
     },
 });

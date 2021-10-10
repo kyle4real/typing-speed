@@ -59,6 +59,8 @@ const TextBox = ({ wordsArr, input, setInput, on }) => {
             const word = currentWord.word;
             if (input.trim() === word) {
                 dispatch(wordsActions.addCorrectWord(currentWord));
+            } else {
+                dispatch(wordsActions.addIncorrectWord(currentWord));
             }
         },
         [currentWord, dispatch]

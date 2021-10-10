@@ -1,4 +1,5 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useCallback } from "react";
+import { useSelector } from "react-redux";
 import Results from "./Results/Results";
 import {
     SInput,
@@ -12,7 +13,7 @@ import {
 } from "./styles";
 import TextBox from "./TextBox/TextBox";
 
-const wordsArr = [
+let wordsArr = [
     "consider",
     "minute",
     "accord",
@@ -51,21 +52,63 @@ const shuffle = (array) => {
     return array;
 };
 
-const words = shuffle(wordsArr).reduce((r, v, i) => {
+wordsArr = shuffle(wordsArr).reduce((r, v, i) => {
     return r.concat({
         word: v,
         id: i,
     });
 }, []);
 
+const reduceWords = (words) => {
+    return words.reduce((r, v) => r.concat(v.word), []);
+};
+const wordsLength = (words) => {
+    return words.length > 0 ? words.join(" ").length + 1 : 0;
+};
+
+const initialCount = 5;
+
 const TypeTest = () => {
+    const { correctWords, incorrectWords } = useSelector((state) => state.words);
     const timerRef = useRef(null);
     const [on, setOn] = useState(false);
     const [input, setInput] = useState("");
-    const [count, setCount] = useState(60);
+    const [count, setCount] = useState(initialCount);
+    const [hide, setHide] = useState(false);
+    const [keyStrokes, setKeyStrokes] = useState(0);
+
+    const calcResult = useCallback(() => {
+        const correctWordsArray = reduceWords(correctWords);
+        const incorrectWordsArray = reduceWords(incorrectWords);
+        // const allWordsArray = [...correctWordsArray, ...incorrectWordsArray];
+
+        const correctWordsLength = wordsLength(correctWordsArray);
+        const incorrectWordsLength = wordsLength(incorrectWordsArray);
+
+        const totalRequiredKeyStrokes = correctWordsLength + incorrectWordsLength;
+        const correctKeyStrokes = correctWordsLength;
+        const incorrectKeyStrokes = keyStrokes - correctKeyStrokes;
+
+        const WPM =
+            Math.ceil(60 / initialCount) * Math.round(correctWordsArray.join(" ").length / 5);
+
+        const resultObj = {
+            correctWords: correctWordsArray.length,
+            incorrectWords: incorrectWordsArray.length,
+            wpm: WPM,
+            keyStrokes,
+            correctKeyStrokes,
+            incorrectKeyStrokes,
+            totalRequiredKeyStrokes,
+        };
+
+        console.log(resultObj);
+    }, [correctWords, incorrectWords, keyStrokes]);
 
     const changeHandler = (e) => {
+        if (hide) return;
         setInput(e.target.value);
+        setKeyStrokes((p) => p + 1);
         if (!on) setOn(true);
     };
 
@@ -86,14 +129,17 @@ const TypeTest = () => {
     useEffect(() => {
         if (count < 0) {
             setOn(false);
-            setCount(60);
+            setCount(initialCount);
+            setHide(true);
+            setInput("");
+            calcResult();
         }
-    }, [count]);
+    }, [count, calcResult]);
 
     return (
         <STypeTest>
             <STypeTestContent>
-                <TextBox wordsArr={words} input={input} setInput={setInput} on={on} />
+                {!hide && <TextBox wordsArr={wordsArr} input={input} setInput={setInput} on={on} />}
                 <SRelativeContainer>
                     <STimer>{count}</STimer>
                     <SInput value={input} onChange={changeHandler} />

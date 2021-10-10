@@ -4,6 +4,7 @@ import {
     SAutoSave,
     SAutoSaveInput,
     SAutoSaveLabel,
+    SCheckIcon,
     SData,
     SFlexBox,
     SLabel,
@@ -24,12 +25,17 @@ import {
     STableHeadTH,
     STableHeadTR,
     STitle,
+    SUndoSave,
     SWPM,
 } from "./styles";
 
 const Results = () => {
     const { results } = useSelector((state) => state.results);
-    const [latestResult, setLatestResult] = useState();
+    const [saved, setSaved] = useState();
+
+    const saveHandler = () => {
+        setSaved((p) => !p);
+    };
 
     return (
         <SResults>
@@ -60,7 +66,20 @@ const Results = () => {
                 </SList>
                 <SResultOptions>
                     <SFlexBox>
-                        <SSaveResult>Save</SSaveResult>
+                        <SFlexBox>
+                            <SSaveResult onClick={saveHandler} isSaved={saved}>
+                                {!saved ? (
+                                    <>Save</>
+                                ) : (
+                                    <>
+                                        Saved&nbsp;
+                                        <SCheckIcon />
+                                    </>
+                                )}
+                            </SSaveResult>
+                            {saved && <SUndoSave>Undo</SUndoSave>}
+                        </SFlexBox>
+
                         <SShareResult>
                             <SShareIcon />
                             &nbsp;Share

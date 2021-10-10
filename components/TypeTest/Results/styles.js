@@ -2,7 +2,7 @@ import styled from "styled-components";
 
 import { v, s } from "../../../styles/variables";
 
-import { IoShareSocialOutline } from "react-icons/io5";
+import { IoShareSocialOutline, IoCheckmarkOutline } from "react-icons/io5";
 
 export const SResults = styled.div`
     margin-top: ${v.lgSpacing};
@@ -56,12 +56,29 @@ export const SFlexBox = styled.div`
 export const SSaveResult = styled.button`
     outline: none;
     border: none;
-    background: ${({ theme }) => theme.primary};
+    background: ${({ theme, isSaved }) => (!isSaved ? theme.primary : "green")};
     color: ${({ theme }) => theme.textInvert};
     font-family: inherit;
     padding: ${v.smSpacing} ${v.mdSpacing};
     cursor: pointer;
     border-radius: 4px;
+    display: flex;
+    align-items: center;
+`;
+export const SCheckIcon = styled(IoCheckmarkOutline)`
+    display: block;
+    margin-right: -4px;
+`;
+export const SUndoSave = styled.button`
+    outline: none;
+    border: none;
+    background: none;
+    font-family: inherit;
+    padding: ${v.smSpacing} ${v.mdSpacing};
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    font-size: 12px;
 `;
 export const SShareResult = styled.button`
     outline: none;
@@ -97,6 +114,8 @@ export const SAutoSaveLabel = styled.label`
 export const STableContainer = styled.div`
     margin-top: ${v.lgSpacing};
     overflow-y: auto;
+    border: 1px solid ${({ theme }) => theme.primary};
+    border-radius: 4px;
 `;
 
 export const STable = styled.table`
