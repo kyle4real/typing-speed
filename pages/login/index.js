@@ -1,5 +1,6 @@
 import React from "react";
 import Auth from "../../components/Auth/Auth";
+import * as api from "./../../utils/axios";
 
 const formData = {
     title: "Log In",
@@ -16,16 +17,22 @@ const formData = {
         {
             label: "Email",
             type: "text",
+            inputName: "email",
         },
         {
             label: "Password",
             type: "password",
+            inputName: "password",
         },
     ],
 };
 
 const Login = () => {
-    return <Auth formData={formData} />;
+    const loginHandler = async (form, callback) => {
+        const { data } = await api.login(form);
+    };
+
+    return <Auth formData={formData} onSubmit={loginHandler} />;
 };
 
 export default Login;

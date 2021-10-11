@@ -1,5 +1,6 @@
 import React from "react";
 import Auth from "../../components/Auth/Auth";
+import * as api from "./../../utils/axios";
 
 const formData = {
     title: "Create Account",
@@ -16,24 +17,32 @@ const formData = {
         {
             label: "Name",
             type: "text",
+            inputName: "name",
         },
         {
             label: "Email",
-            type: "text",
+            type: "email",
+            inputName: "email",
         },
         {
             label: "Password",
             type: "password",
+            inputName: "password",
         },
         {
             label: "Confirm Password",
             type: "password",
+            inputName: "confirmPassword",
         },
     ],
 };
 
 const CreateAccount = () => {
-    return <Auth formData={formData} />;
+    const createAccountHandler = async (form, callback) => {
+        const { data } = await api.createAccount(form);
+    };
+
+    return <Auth formData={formData} onSubmit={createAccountHandler} />;
 };
 
 export default CreateAccount;

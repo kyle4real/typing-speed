@@ -13,31 +13,51 @@ import {
     SSubmitButton,
 } from "./styles";
 
-const Auth = ({ formData }) => {
+const initialForm = (formFields) => {
+    return formFields.reduce((r, v) => Object.assign(r, { [v.inputName]: "" }), {});
+};
+
+const Auth = ({ formData, onSubmit }) => {
     let { formFields } = formData;
-    const [form, setForm] = useState(
-        formFields.reduce((r, v) => Object.assign(r, { [v.label.toLowerCase()]: "" }), {})
-    );
+    const [form, setForm] = useState(initialForm(formFields));
 
     const changeHandler = (e) => {
         setForm((p) => ({ ...p, [e.target.name]: e.target.value }));
     };
 
+    const submitHandler = (e) => {
+        e.preventDefault();
+        // 'half-cooked' form validation
+        for (const field in form) {
+            if (!form[field].length) return;
+        }
+        // Submit callback to parent component
+        onSubmit(form, () => {
+            // CALLBACK
+            // Reset form
+            setForm(initialForm(formFields));
+        });
+    };
+
     return (
         <SAuth>
-            <SForm autoComplete="off">
+            <SForm autoComplete="off" noValidate>
                 <SFormTitle>{formData.title}</SFormTitle>
-                {formFields.map(({ label, type }, index) => {
-                    const inputName = label.toLowerCase();
+                {formFields.map(({ inputName, label, type }, index) => {
                     return (
                         <SFormControl key={index}>
                             <SLabel htmlFor={inputName}>{label}</SLabel>
-                            <SInput name={inputName} type={type} onChange={changeHandler} />
+                            <SInput
+                                name={inputName}
+                                type={type}
+                                onChange={changeHandler}
+                                value={form[inputName]}
+                            />
                         </SFormControl>
                     );
                 })}
                 <SFormControl>
-                    <SSubmitButton>{formData.submit}</SSubmitButton>
+                    <SSubmitButton onClick={submitHandler}>{formData.submit}</SSubmitButton>
                 </SFormControl>
                 <SRedirect>
                     {formData.redirect.text}&nbsp;
