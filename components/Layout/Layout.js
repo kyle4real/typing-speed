@@ -5,6 +5,7 @@ import { SPage } from "./styles";
 const headerData = {
     button: {
         text: "Sign In",
+        href: "/login",
     },
     navLinks: [
         {

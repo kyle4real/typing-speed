@@ -68,7 +68,7 @@ const wordsLength = (words) => {
     return words.length > 0 ? words.join(" ").length + 1 : 0;
 };
 
-const initialCount = 5;
+const initialCount = 60;
 
 const TypeTest = () => {
     const dispatch = useDispatch();

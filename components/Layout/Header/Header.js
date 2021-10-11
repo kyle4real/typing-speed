@@ -1,6 +1,7 @@
 import React from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { useRouter } from "next/router";
 import { useDispatch, useSelector } from "react-redux";
 import { uiActions } from "../../../app/slices/uiSlice";
 
@@ -20,9 +21,9 @@ import {
     SNav,
     SNavLink,
 } from "./styles";
-import { useRouter } from "next/dist/client/router";
 
 const Header = ({ headerData }) => {
+    const router = useRouter();
     const dispatch = useDispatch();
     const { route } = useRouter();
     const { menuOpen } = useSelector((state) => state.ui);
@@ -49,7 +50,9 @@ const Header = ({ headerData }) => {
                         </SNav>
                     </SFlex>
                     <SFlex>
-                        <SButton>{headerData.button.text}</SButton>
+                        <SButton onClick={() => router.push(headerData.button.href)}>
+                            {headerData.button.text}
+                        </SButton>
                     </SFlex>
                     <SFlex>
                         <SMenuIcon onClick={() => dispatch(uiActions.menuToggle())} />
@@ -64,7 +67,9 @@ const Header = ({ headerData }) => {
                                     </Link>
                                 ))}
                             </SMenuNav>
-                            <SButton>{headerData.button.text}</SButton>
+                            <SButton onClick={() => router.push(headerData.button.href)}>
+                                {headerData.button.text}
+                            </SButton>
                         </SMenu>
                     )}
                 </SHeaderMain>
